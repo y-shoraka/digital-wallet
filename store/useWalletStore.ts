@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { create } from "zustand"
-import { persist, createJSONStorage } from "zustand/middleware"
-import { v4 as uuidv4 } from "uuid"
-import * as randomWords from "random-words"
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { v4 as uuidv4 } from "uuid";
+import * as randomWords from "random-words";
 
 type Transaction = {
-  id: string
-  type: "deposit" | "send" | "receive"
-  amount: number
-  address?: string
-  date: string
-}
+  id: string;
+  type: "deposit" | "send" | "receive";
+  amount: number;
+  address?: string;
+  date: string;
+};
 
 interface WalletState {
-  hasWallet: boolean
-  seedPhrase: string[]
-  walletAddress: string
-  balance: number
-  transactions: Transaction[]
+  hasWallet: boolean;
+  seedPhrase: string[];
+  walletAddress: string;
+  balance: number;
+  transactions: Transaction[];
 
   // Actions
-  createWallet: () => void
-  confirmSeedPhrase: () => void
-  increaseBalance: () => void
-  sendFunds: (address: string, amount: number) => boolean
-  resetWallet: () => void
+  createWallet: () => void;
+  confirmSeedPhrase: () => void;
+  increaseBalance: () => void;
+  sendFunds: (address: string, amount: number) => boolean;
+  resetWallet: () => void;
 }
 
 export const useWalletStore = create<WalletState>()(
@@ -39,18 +39,19 @@ export const useWalletStore = create<WalletState>()(
 
       createWallet: () => {
         // Generate 12 random English words
-        const words = randomWords.generate({ exactly: 12 })
-        set({ seedPhrase: words })
+        const words = randomWords.generate({ exactly: 12 });
+        set({ seedPhrase: words as string[] });
       },
 
       confirmSeedPhrase: () => {
         // Generate a wallet address (UUID)
-        const address = uuidv4()
-        set({ walletAddress: address, hasWallet: true })
+        const address = uuidv4();
+        document.cookie = `hasWallet=${true}; path=/`;
+        set({ walletAddress: address, hasWallet: true });
       },
 
       increaseBalance: () => {
-        const amount = 40
+        const amount = 40;
         set((state) => ({
           balance: state.balance + amount,
           transactions: [
@@ -62,14 +63,14 @@ export const useWalletStore = create<WalletState>()(
             },
             ...state.transactions,
           ],
-        }))
+        }));
       },
 
       sendFunds: (address: string, amount: number) => {
-        const { balance } = get()
+        const { balance } = get();
 
         if (amount <= 0 || amount > balance) {
-          return false
+          return false;
         }
 
         set((state) => ({
@@ -84,9 +85,9 @@ export const useWalletStore = create<WalletState>()(
             },
             ...state.transactions,
           ],
-        }))
+        }));
 
-        return true
+        return true;
       },
 
       resetWallet: () => {
@@ -96,13 +97,12 @@ export const useWalletStore = create<WalletState>()(
           walletAddress: "",
           balance: 0,
           transactions: [],
-        })
+        });
       },
     }),
     {
       name: "wallet-storage", // unique name for localStorage
       storage: createJSONStorage(() => localStorage),
-    },
-  ),
-)
-
+    }
+  )
+);

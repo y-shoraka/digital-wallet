@@ -1,34 +1,25 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useWalletStore } from "@/store/useWalletStore"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useWalletStore } from "@/store/useWalletStore";
 
 export default function SeedPhrasePage() {
   const { hasWallet, seedPhrase, confirmSeedPhrase } = useWalletStore();
-  const router = useRouter()
-
-  useEffect(() => {
-    if (hasWallet) {
-      router.push("/wallet")
-    }
-
-    if (seedPhrase.length === 0) {
-      router.push("/login")
-    }
-  }, [hasWallet, seedPhrase, router])
+  const router = useRouter();
 
   const handleConfirm = () => {
-    confirmSeedPhrase()
-    router.push("/wallet")
-  }
+    confirmSeedPhrase();
+    router.push("/wallet");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="card max-w-md w-full">
         <h1 className="text-2xl font-bold mb-6 text-center">عبارت بازیابی</h1>
         <p className="mb-6 text-center">
-          این ۱۲ کلمه را در جایی امن یادداشت کنید. با استفاده از این کلمات می‌توانید کیف پول خود را بازیابی کنید.
+          این ۱۲ کلمه را در جایی امن یادداشت کنید. با استفاده از این کلمات
+          می‌توانید کیف پول خود را بازیابی کنید.
         </p>
 
         <div className="grid grid-cols-3 gap-4 mb-8">
@@ -47,6 +38,5 @@ export default function SeedPhrasePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
